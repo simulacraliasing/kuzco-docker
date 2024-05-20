@@ -1,6 +1,6 @@
 # Kuzco Docker 部署
 
-## 先决条件
+## 前置需求
 - Docker
 - docker-compose
 
