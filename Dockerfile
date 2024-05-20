@@ -13,7 +13,7 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/* /var/cache/apt/*
 
 COPY models/ /root/.kuzco/models/
-# Run the Kuzco installation command
+
 COPY script/ /root/script/
 
 RUN chmod +x /root/script/install.sh /root/script/kuzco_start.sh /root/script/worker.sh && \
