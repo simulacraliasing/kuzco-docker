@@ -1,0 +1,56 @@
+version: "3"
+services:
+  kuzco-worker-1:
+    build: .
+    image: kuzco-worker:latest
+    container_name: kuzco-worker-1
+    restart: unless-stopped
+    volumes:
+      - /kuzco/worker1:/root/log # use your own path
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              device_ids: ["0"] # GPU 0
+              capabilities: [gpu]
+    environment:
+      - TZ=Asia/Shanghai
+      - KUZCO_EMAIL={YOUR KUZCO ACCOUNT EMAIL} # use your own account
+      - KUZCO_PASSWORD={YOUR KUZCO ACCOUNT PASSWORD} # use your own password
+      - WORKER_CODE={YOUR WORKER CODE} # use your own worker code
+    labels:
+      autoheal-kuzco: true
+
+  kuzco-worker-2:
+    image: kuzco-worker:latest
+    container_name: kuzco-worker-2
+    restart: unless-stopped
+    volumes:
+      - /kuzco/worker2:/root/log
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              device_ids: ["1"] # GPU 1
+              capabilities: [gpu]
+    labels:
+      autoheal-kuzco: true
+    environment:
+      - TZ=Asia/Shanghai
+      - KUZCO_EMAIL={YOUR KUZCO ACCOUNT EMAIL} # use your own account
+      - KUZCO_PASSWORD={YOUR KUZCO ACCOUNT PASSWORD} # use your own password
+      - WORKER_CODE={YOUR WORKER CODE} # use your own worker code
+
+  autoheal:
+    deploy:
+      replicas: 1
+    environment:
+      AUTOHEAL_CONTAINER_LABEL: autoheal-kuzco
+    image: willfarrell/autoheal:latest
+    network_mode: none
+    restart: always
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /var/run/docker.sock:/var/run/docker.sock
