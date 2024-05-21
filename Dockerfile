@@ -16,7 +16,7 @@ COPY models/ /root/.kuzco/models/
 
 COPY script/ /root/script/
 
-RUN chmod +x /root/script/install.sh /root/script/kuzco_start.sh /root/script/worker.sh && \
+RUN chmod +x /root/script/install.sh /root/script/versioncheck.sh /root/script/kuzco_start.exp /root/script/worker.sh && \
     /root/script/install.sh
 
 HEALTHCHECK --interval=1m --timeout=3s --retries=3 CMD /bin/bash /root/script/healthcheck.sh
